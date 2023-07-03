@@ -41,7 +41,7 @@ const usePreventScroll = ({
       isContentTouchedRef.current = true; // 컨텐츠 터치 여부
     };
 
-    const handleTouchEnd = (e: TouchEvent) => {
+    const handleTouchEnd = () => {
       if (!scrollRef.current) return;
       hasScrolledRef.current = doesElementHaveScroll(scrollRef.current); // 세로 스크롤 여부를 재확인
       isContentTouchedRef.current = false; // 컨텐츠 터치 여부
@@ -71,7 +71,7 @@ const usePreventScroll = ({
 
     let prevValue = 0;
     // Safari에서의 오버스크롤을 방지하는 함수
-    const preventSafariOverscrollOnStart = (e: TouchEvent) => {
+    const preventSafariOverscrollOnStart = () => {
       if (!scrollRef.current) return;
       if (scrollRef.current.scrollTop <= 0) {
         prevValue = scrollRef.current.scrollTop;

@@ -11,7 +11,6 @@ import { PanInfo, motion, useAnimation } from 'framer-motion';
 import { createPortal } from 'react-dom';
 
 import { usePreventScroll } from './hooks/usePreventScroll';
-import './style.css';
 import { FramerBottomSheetType, SnapType } from './sheetType';
 import React from 'react';
 
@@ -142,6 +141,7 @@ const Sheet: FramerBottomSheetType = (
               }
             }}
             ref={scrollRef}
+            style={{ WebkitOverflowScrolling: 'touch' }}
             className={`h-full shrink-0 grow select-auto overscroll-contain 
                         ${
                           bottomScrollLock && position === 'bottom'

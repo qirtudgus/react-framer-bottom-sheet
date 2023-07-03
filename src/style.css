@@ -1,7 +1,0 @@
-[data-scroll-ref] {
-    -webkit-touch-callout: none;
-    /* safari 5-12.2환경의 overScroll을 막아줌
-    https://developer.mozilla.org/en-US/docs/Web/CSS/-webkit-overflow-scrolling
-    */
-    -webkit-overflow-scrolling: touch;
-  }

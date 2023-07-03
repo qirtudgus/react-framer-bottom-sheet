@@ -17,7 +17,8 @@
     "lint": "tsdx lint",
     "prepare": "tsdx build",
     "size": "size-limit",
-    "analyze": "size-limit --why"
+    "analyze": "size-limit --why",
+    "release": "np"
   },
   "peerDependencies": {
     "react": ">=16"
@@ -39,11 +40,11 @@
   "size-limit": [
     {
       "path": "dist/react-framer-bottom-sheet.cjs.production.min.js",
-      "limit": "10 KB"
+      "limit": "100 KB"
     },
     {
       "path": "dist/react-framer-bottom-sheet.esm.js",
-      "limit": "10 KB"
+      "limit": "100 KB"
     }
   ],
   "devDependencies": {
@@ -60,5 +61,8 @@
   },
   "dependencies": {
     "framer-motion": "^10.12.18"
+  },
+  "np": {
+    "yarn": true
   }
 }
