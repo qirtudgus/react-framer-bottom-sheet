@@ -122,14 +122,32 @@ const Sheet: FramerBottomSheetType = (
           transition={{
             type: 'just',
           }}
-          className={`fixed bottom-0 left-0  z-[3] flex w-screen select-auto flex-col overflow-hidden overscroll-none rounded-t-3xl shadow-[0_-3px_7px_0_rgba(0,0,0,0.1)]`}
           style={{
+            position: 'fixed',
+            bottom: '0',
+            left: '0',
+            display: 'flex',
+            width: '100vw',
+            overflow: 'hidden',
+            userSelect: 'auto',
+            flexDirection: 'column',
+            overscrollBehavior: 'none',
+            borderRadius: '1.5rem 1.5rem 0 0',
+            boxShadow: '0 -3px 7px 0 rgba(0,0,0,0.1)',
             height: maxHeight,
+            zIndex: 3,
             ...style,
           }}
         >
           {header && (
-            <div data-header-ref className=" h-fit shrink-0 text-center">
+            <div
+              data-header-ref
+              style={{
+                height: 'fit-content',
+                flexShrink: 0,
+                textAlign: 'center',
+              }}
+            >
               {headerElement}
             </div>
           )}
@@ -141,14 +159,16 @@ const Sheet: FramerBottomSheetType = (
               }
             }}
             ref={scrollRef}
-            style={{ WebkitOverflowScrolling: 'touch' }}
-            className={`h-full shrink-0 grow select-auto overscroll-contain 
-                        ${
-                          bottomScrollLock && position === 'bottom'
-                            ? 'overflow-hidden'
-                            : 'overflow-auto'
-                        }
-                       `}
+            style={{
+              WebkitOverflowScrolling: 'touch',
+              userSelect: 'auto',
+              overscrollBehavior: 'contain',
+              height: '100%',
+              flexShrink: 0,
+              flexGrow: 1,
+              overflow:
+                bottomScrollLock && position === 'bottom' ? 'hidden' : 'auto',
+            }}
           >
             <div data-content-ref ref={contentRef}>
               {children}
