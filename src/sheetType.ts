@@ -5,7 +5,7 @@ import React, {
   ReactNode,
 } from 'react';
 
-import { Inertia, motion } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 export type SnapType = 'bottom' | 'top';
 
@@ -51,6 +51,7 @@ export type FramerBottomSheetProps = React.ComponentPropsWithoutRef<
     /**
      * bottomSheet Footer 렌더링 여부
      */
+    footer?: boolean;
     footerElement?: ReactNode;
     /**
      * bottom일때와 top일때의 스냅포인트
@@ -68,7 +69,6 @@ export type FramerBottomSheetProps = React.ComponentPropsWithoutRef<
      * @default document.body
      */
     portalContainer?: Element | DocumentFragment;
-    dranTransition?: Partial<Omit<Inertia, 'velocity' | 'type'>> | undefined;
   };
 
 export interface UsePreventScrollProps {

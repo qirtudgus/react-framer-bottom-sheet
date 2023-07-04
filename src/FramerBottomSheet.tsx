@@ -20,6 +20,7 @@ const FramerBottomSheet: FramerBottomSheetType = (
     onOpenEnd,
     onCloseEnd,
     header = true,
+    footer = false,
     headerElement,
     footerElement,
     snapPoint,
@@ -177,7 +178,7 @@ const FramerBottomSheet: FramerBottomSheetType = (
               {children}
             </div>
           </motion.div>
-          {footerElement && (
+          {footer && (
             <div
               data-footer-ref
               style={{
