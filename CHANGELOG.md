@@ -2,6 +2,13 @@
 
 framer motion bottom sheet
 
+## [0.1.53] 2023-07-03
+
+### Feature
+
+- add README
+- 실수의 반복
+
 ## [0.1.3] 2023-07-03
 
 ### Feature
