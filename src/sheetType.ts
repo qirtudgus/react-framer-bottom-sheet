@@ -51,7 +51,6 @@ export type FramerBottomSheetProps = React.ComponentPropsWithoutRef<
     /**
      * bottomSheet Footer 렌더링 여부
      */
-    footer?: boolean;
     footerElement?: ReactNode;
     /**
      * bottom일때와 top일때의 스냅포인트

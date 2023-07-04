@@ -20,7 +20,6 @@ const FramerBottomSheet: FramerBottomSheetType = (
     onOpenEnd,
     onCloseEnd,
     header = true,
-    footer = false,
     headerElement,
     footerElement,
     snapPoint,
@@ -29,6 +28,9 @@ const FramerBottomSheet: FramerBottomSheetType = (
     style,
     portalContainer,
     dragTransition,
+    dragMomentum,
+    dragConstraints,
+    ...props
   },
   externalRef
 ) => {
@@ -115,11 +117,13 @@ const FramerBottomSheet: FramerBottomSheetType = (
           initial={position}
           animate={controls}
           variants={heightVariantMemo}
-          dragConstraints={{
-            top: 0,
-            bottom: maxHeight - minHeight,
-          }}
-          dragMomentum={false}
+          dragConstraints={
+            dragConstraints ?? {
+              top: 0,
+              bottom: maxHeight - minHeight,
+            }
+          }
+          dragMomentum={dragMomentum ?? false}
           dragElastic={{ top: 0, bottom: 0 }}
           dragTransition={
             dragTransition ?? { min: 0, max: 0, bounceStiffness: 400 }
@@ -143,6 +147,7 @@ const FramerBottomSheet: FramerBottomSheetType = (
             zIndex: 3,
             ...style,
           }}
+          {...props}
         >
           {header && (
             <div
@@ -178,7 +183,7 @@ const FramerBottomSheet: FramerBottomSheetType = (
               {children}
             </div>
           </motion.div>
-          {footer && (
+          {footerElement && (
             <div
               data-footer-ref
               style={{
