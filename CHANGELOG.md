@@ -9,6 +9,7 @@ framer motion bottom sheet
 - add Props FooterElement
 - rename Sheet.tsx -> FramerBottomSheet.tsx
 - add example TestPage
+- add dragTransition property
 
 ## [0.1.2] 2023-07-03
 
