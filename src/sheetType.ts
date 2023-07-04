@@ -5,7 +5,7 @@ import React, {
   ReactNode,
 } from 'react';
 
-import { motion } from 'framer-motion';
+import { Inertia, motion } from 'framer-motion';
 
 export type SnapType = 'bottom' | 'top';
 
@@ -68,6 +68,7 @@ export type FramerBottomSheetProps = React.ComponentPropsWithoutRef<
      * @default document.body
      */
     portalContainer?: Element | DocumentFragment;
+    dranTransition?: Partial<Omit<Inertia, 'velocity' | 'type'>> | undefined;
   };
 
 export interface UsePreventScrollProps {

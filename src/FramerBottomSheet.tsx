@@ -27,6 +27,7 @@ const FramerBottomSheet: FramerBottomSheetType = (
     children,
     style,
     portalContainer,
+    dragTransition,
   },
   externalRef
 ) => {
@@ -119,7 +120,9 @@ const FramerBottomSheet: FramerBottomSheetType = (
           }}
           dragMomentum={false}
           dragElastic={{ top: 0, bottom: 0 }}
-          dragTransition={{ min: 0, max: 0, bounceStiffness: 400 }}
+          dragTransition={
+            dragTransition ?? { min: 0, max: 0, bounceStiffness: 400 }
+          }
           transition={{
             type: 'just',
           }}
