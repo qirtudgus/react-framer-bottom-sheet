@@ -43,11 +43,15 @@ export type FramerBottomSheetProps = React.ComponentPropsWithoutRef<
      */
     onCloseEnd?: (event?: MouseEvent | TouchEvent | PointerEvent) => void;
     /**
-     * 헤더 컴포넌트 렌더링 여부
+     * bottomSheet Header 렌더링 여부
      * @default [true]
      */
     header?: boolean;
     headerElement?: ReactNode;
+    /**
+     * bottomSheet Footer 렌더링 여부
+     */
+    footerElement?: ReactNode;
     /**
      * bottom일때와 top일때의 스냅포인트
      */

@@ -1,2 +1,2 @@
-import { Sheet } from './Sheet';
-export default Sheet;
+import { FramerBottomSheet } from './FramerBottomSheet';
+export default FramerBottomSheet;

@@ -11,16 +11,17 @@ import { PanInfo, motion, useAnimation } from 'framer-motion';
 import { createPortal } from 'react-dom';
 
 import { usePreventScroll } from './hooks/usePreventScroll';
-import { FramerBottomSheetType, SnapType } from './sheetType';
 import React from 'react';
+import { FramerBottomSheetType, SnapType } from './sheetType';
 
-const Sheet: FramerBottomSheetType = (
+const FramerBottomSheet: FramerBottomSheetType = (
   {
     initialPosition = 'bottom',
     onOpenEnd,
     onCloseEnd,
     header = true,
     headerElement,
+    footerElement,
     snapPoint,
     bottomScrollLock = false,
     children,
@@ -34,7 +35,6 @@ const Sheet: FramerBottomSheetType = (
   const scrollRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const controls = useAnimation();
-
   const maxHeight = snapPoint.top.height;
   const minHeight = snapPoint.bottom.height;
 
@@ -82,8 +82,9 @@ const Sheet: FramerBottomSheetType = (
     info: PanInfo
   ) => {
     const speedY = info.velocity.y;
-    const shouldClose = speedY > 45;
-    const shouldOpen = speedY < -45;
+    const shouldClose = speedY > 0;
+    const shouldOpen = speedY < -0;
+
     if (shouldClose) {
       await handleClose(event);
     } else if (shouldOpen) {
@@ -164,7 +165,6 @@ const Sheet: FramerBottomSheetType = (
               userSelect: 'auto',
               overscrollBehavior: 'contain',
               height: '100%',
-              flexShrink: 0,
               flexGrow: 1,
               overflow:
                 bottomScrollLock && position === 'bottom' ? 'hidden' : 'auto',
@@ -174,11 +174,23 @@ const Sheet: FramerBottomSheetType = (
               {children}
             </div>
           </motion.div>
+          {footerElement && (
+            <div
+              data-footer-ref
+              style={{
+                height: 'fit-content',
+                flexShrink: 0,
+                textAlign: 'center',
+              }}
+            >
+              {footerElement}
+            </div>
+          )}
         </motion.div>,
         portalContainer ?? document.body
       )}
     </>
   );
 };
-const FramerBottomSheetRef = forwardRef(Sheet);
-export { FramerBottomSheetRef as Sheet };
+const FramerBottomSheetRef = forwardRef(FramerBottomSheet);
+export { FramerBottomSheetRef as FramerBottomSheet };

@@ -1,12 +1,23 @@
-import 'react-app-polyfill/ie11';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { Thing } from '../.';
+
+import FramerBottomSheet from '../src';
 
 const App = () => {
   return (
     <div>
-      <Thing />
+      <div>TEST PAGE</div>
+
+      <FramerBottomSheet
+        initialPosition="top"
+        style={{ backgroundColor: '#FAFAFA' }}
+        snapPoint={{ top: { height: 200 }, bottom: { height: 100 } }}
+        header={true}
+        bottomScrollLock
+        headerElement={<div className="h-10 bg-white">헤더</div>}
+      >
+        <div style={{ height: 1000, backgroundColor: 'blue' }}> 요소 </div>
+      </FramerBottomSheet>
     </div>
   );
 };
