@@ -9,6 +9,7 @@ const usePreventScroll = ({
   const isContentTouchedRef = useRef(false);
   const hasScrolledRef = useRef(false);
   const initialTouchYCoordRef = useRef(0);
+  const lastTouchScrollTopRef = useRef<number>(0);
 
   // 요소가 스크롤을 가지고 있는지 판단하는 함수
   const doesElementHaveScroll = (element: HTMLElement) => {
@@ -45,6 +46,7 @@ const usePreventScroll = ({
       if (!scrollRef.current) return;
       hasScrolledRef.current = doesElementHaveScroll(scrollRef.current); // 세로 스크롤 여부를 재확인
       isContentTouchedRef.current = false; // 컨텐츠 터치 여부
+      lastTouchScrollTopRef.current = scrollRef.current.scrollTop;
     };
 
     const handleTouchMove = (e: TouchEvent) => {
@@ -130,6 +132,7 @@ const usePreventScroll = ({
     isContentTouchedRef,
     hasScrolledRef,
     initialTouchYCoordRef,
+    lastTouchScrollTopRef,
   };
 };
 

@@ -10,8 +10,36 @@ import { motion } from 'framer-motion';
 export type SnapType = 'bottom' | 'top';
 
 export interface FramerBottomSheetRefHandles {
+  /**
+   * 포지션을 스냅할 때 사용
+   * @param position 'top' or 'bottom'
+   */
   snapTo: (position: SnapType) => void;
+  /**
+   * 시트의 현재 포지션
+   * @returns 'top' | 'bottom'
+   */
   getPosition: () => string;
+  /**
+   * content ScrollTop Value
+   * @returns number
+   */
+  getContentScrollTop: () => number;
+  /**
+   * set content scrollTop
+   * @param scrollValue
+   */
+  contentScrollTo: (scrollValue: number) => void;
+  /**
+   * 시트를 구성하는 HTMLDivElement 반환
+   */
+  getElements: () => {
+    containerRef: HTMLDivElement | null;
+    headerRef: HTMLDivElement | null;
+    scrollRef: HTMLDivElement | null;
+    contentRef: HTMLDivElement | null;
+    footerRef: HTMLDivElement | null;
+  };
 }
 
 export type FramerBottomSheetRef = FramerBottomSheetRefHandles;
@@ -74,7 +102,6 @@ export interface UsePreventScrollProps {
   scrollRef: MutableRefObject<HTMLElement | null>;
   bottomScrollLock: boolean;
   position: string;
-  header: boolean;
 }
 
 export type FramerBottomSheetType = ForwardRefRenderFunction<

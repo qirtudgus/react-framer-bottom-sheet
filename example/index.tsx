@@ -15,6 +15,7 @@ const App = () => {
         header={true}
         bottomScrollLock
         headerElement={<div className="h-10 bg-white">헤더</div>}
+        footerElement={<div className="h-10 bg-white">푸터</div>}
       >
         <div style={{ height: 1000, backgroundColor: 'blue' }}> 요소 </div>
       </FramerBottomSheet>

@@ -1,5 +1,5 @@
 {
-  "version": "0.1.53",
+  "version": "0.1.6",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -23,11 +23,6 @@
   "peerDependencies": {
     "react": ">=16"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "tsdx lint"
-    }
-  },
   "prettier": {
     "printWidth": 80,
     "semi": true,
@@ -36,6 +31,13 @@
   },
   "name": "react-framer-bottom-sheet",
   "author": "qirtudgus",
+  "repository": "https://github.com/qirtudgus/react-framer-bottom-sheet",
+  "description": "react framer motion bottom sheet",
+  "keywords": [
+    "bottom sheet",
+    "react bottom sheet",
+    "framer-motion"
+  ],
   "module": "dist/react-framer-bottom-sheet.esm.js",
   "size-limit": [
     {
