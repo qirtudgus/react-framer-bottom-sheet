@@ -2,6 +2,12 @@
 
 framer motion bottom sheet
 
+## [0.1.61] 2023-07-05
+
+### Fix
+
+- Fixed a two FooterElement
+
 ## [0.1.6] 2023-07-05
 
 ### Feature / Fix
