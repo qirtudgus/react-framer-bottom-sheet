@@ -238,18 +238,6 @@ const FramerBottomSheet: FramerBottomSheetType = (
                 {children}
               </div>
             </motion.div>
-            {footerElement && (
-              <div
-                data-footer-ref
-                style={{
-                  height: 'fit-content',
-                  flexShrink: 0,
-                  textAlign: 'center',
-                }}
-              >
-                {footerElement}
-              </div>
-            )}
           </motion.div>
           {footerElement && (
             <div
