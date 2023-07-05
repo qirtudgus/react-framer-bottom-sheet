@@ -1,5 +1,7 @@
 # react-framer-bottom-sheet
 
+![framer](https://github.com/qirtudgus/react-framer-bottom-sheet/assets/70016257/3efd07a1-2b77-4dad-8dba-60f8d2f64512)
+
 ## Installation
 
 ```sh
