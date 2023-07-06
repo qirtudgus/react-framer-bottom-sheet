@@ -63,7 +63,6 @@ const usePreventScroll = ({
       );
       // 아래로 슬라이드하고 스크롤을 막아야 할 경우
       if (isSlideDown && shouldPreventDown && e.cancelable) {
-        console.log(' shouldPreventDown: ');
         e.preventDefault();
       } else if (!isSlideDown && shouldPreventUP && e.cancelable) {
         e.preventDefault();
