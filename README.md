@@ -35,12 +35,15 @@ function App() {
         ref={sheetRef}
         style={{ backgroundColor: '#FAFAFA' }}
         snapPoint={{ top: { height: 400 }, bottom: { height: 100 } }}
-        header={true}
         bottomScrollLock
-        headerElement={<div className="h-10 bg-white">header</div>}
-        footerElement={<div className="h-10 bg-white">footer</div>}
+        headerElement={
+          <div style={{ height: 50, backgroundColor: 'red' }}>header</div>
+        }
+        footerElement={
+          <div style={{ height: 50, backgroundColor: 'green' }}>footer</div>
+        }
       >
-        <div>Content</div>
+        <div style={{ height: 500, backgroundColor: 'blue' }}>Content</div>
       </FramerBottomSheet>
     </div>
   );

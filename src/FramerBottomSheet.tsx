@@ -8,19 +8,21 @@ import {
   useState,
 } from 'react';
 
-import { PanInfo, motion, useAnimation, useMotionValue } from 'framer-motion';
+import { PanInfo, motion, useAnimation } from 'framer-motion';
 import { createPortal } from 'react-dom';
 
 import { usePreventScroll } from './hooks/usePreventScroll';
 import React from 'react';
 import { FramerBottomSheetType, SnapType } from './sheetType';
+import useWindowSize from './hooks/useWindowSize';
 
 const FramerBottomSheet: FramerBottomSheetType = (
   {
     initialPosition = 'bottom',
     onOpenEnd,
     onCloseEnd,
-    header = true,
+    onMount,
+    onUnmount,
     headerElement,
     footerElement,
     snapPoint,
@@ -37,6 +39,7 @@ const FramerBottomSheet: FramerBottomSheetType = (
 ) => {
   const [position, setPosition] = useState(initialPosition);
   const [footerHeight, setFooterHeight] = useState(0);
+  const { height } = useWindowSize();
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
@@ -46,7 +49,7 @@ const FramerBottomSheet: FramerBottomSheetType = (
   const maxHeight = snapPoint.top.height;
   const minHeight = snapPoint.bottom.height;
   const initialY = initialPosition === 'top' ? 0 : maxHeight - minHeight;
-  const containerY = useMotionValue(initialY);
+  const containerY = useRef<number>(initialY);
 
   const heightVariantMemo = useMemo(() => {
     return {
@@ -55,22 +58,22 @@ const FramerBottomSheet: FramerBottomSheetType = (
     };
   }, [maxHeight, minHeight]);
 
-  const { lastTouchScrollTopRef } = usePreventScroll({
+  const { lastScrollTopRef } = usePreventScroll({
     scrollRef,
     bottomScrollLock,
     position,
   });
   useImperativeHandle(externalRef, () => ({
     snapTo: (position: SnapType) => {
-      setPosition(position);
+      controls.start(position);
     },
     getPosition: () => {
       return position;
     },
     getContentScrollTop: () => {
-      return lastTouchScrollTopRef.current;
+      return lastScrollTopRef.current;
     },
-    contentScrollTo: scrollValue => {
+    contentScrollTo: (scrollValue: number) => {
       if (scrollRef.current && scrollRef.current.scrollHeight) {
         scrollRef.current.scrollTop = scrollValue;
       }
@@ -90,13 +93,13 @@ const FramerBottomSheet: FramerBottomSheetType = (
     setPosition('bottom');
     controls.start('bottom');
     onCloseEnd && (await onCloseEnd(event));
-    containerY.set(maxHeight);
+    containerY.current = maxHeight;
   };
   const handleOpen = async (event: MouseEvent | TouchEvent | PointerEvent) => {
     setPosition('top');
     controls.start('top');
     onOpenEnd && (await onOpenEnd(event));
-    containerY.set(0);
+    containerY.current = 0;
   };
   const handleSlow = async (
     event: MouseEvent | TouchEvent | PointerEvent,
@@ -116,7 +119,7 @@ const FramerBottomSheet: FramerBottomSheetType = (
     info: PanInfo
   ) => {
     const speedY = info.velocity.y;
-    const yValue = containerY.get();
+    const yValue = containerY.current;
     const shouldClose = speedY > 30;
     const shouldOpen = speedY < -30;
     if (shouldClose) {
@@ -124,7 +127,7 @@ const FramerBottomSheet: FramerBottomSheetType = (
     } else if (shouldOpen) {
       await handleOpen(event);
     } else {
-      handleSlow(event, yValue);
+      await handleSlow(event, yValue);
     }
   };
 
@@ -133,7 +136,7 @@ const FramerBottomSheet: FramerBottomSheetType = (
     _: MouseEvent | TouchEvent | PointerEvent,
     { delta }: PanInfo
   ) => {
-    containerY.set(Math.max(containerY.get() + delta.y, 0));
+    containerY.current = Math.max(containerY.current + delta.y, 0);
   };
 
   //footer의 높이만큼 시트의 bottom에 할당
@@ -143,21 +146,28 @@ const FramerBottomSheet: FramerBottomSheetType = (
     }
   }, [footerElement]);
 
-  //열고 닫기
-  useEffect(() => {
-    setPosition(initialPosition);
-  }, [initialPosition]);
-  useLayoutEffect(() => {
-    controls.start(position);
-  }, [controls, position]);
   // motion.div initial Property bug로 인해 대신 사용하는 초기 포지션 설정
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (initialPosition === 'bottom') {
-      controls.start(initialPosition, { duration: 0 });
+      controls.start('bottom', { duration: 0 });
     } else {
-      controls.start(initialPosition, { duration: 0 });
+      controls.start('top', { duration: 0 });
     }
   }, [controls, initialPosition]);
+
+  //mount, unmount
+  useEffect(() => {
+    onMount && onMount();
+    return () => {
+      onUnmount && onUnmount(lastScrollTopRef.current);
+    };
+  }, [lastScrollTopRef, onMount, onUnmount]);
+
+  // Browser resizing 대응
+  useLayoutEffect(() => {
+    controls.start(position, { duration: 0 });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [height]);
 
   return (
     <>
@@ -196,6 +206,7 @@ const FramerBottomSheet: FramerBottomSheetType = (
               overscrollBehavior: 'none',
               borderRadius: '1.5rem 1.5rem 0 0',
               boxShadow: '0 -3px 7px 0 rgba(0,0,0,0.1)',
+              willChange: 'transform',
               zIndex: 3,
               height: maxHeight,
               bottom: footerHeight ?? 0,
@@ -203,7 +214,7 @@ const FramerBottomSheet: FramerBottomSheetType = (
             }}
             {...props}
           >
-            {header && (
+            {headerElement && (
               <div
                 data-header-ref
                 ref={headerRef}

@@ -1,2 +1,3 @@
 import { FramerBottomSheet } from './FramerBottomSheet';
-export default FramerBottomSheet;
+
+export default { FramerBottomSheet };

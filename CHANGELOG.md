@@ -2,6 +2,25 @@
 
 framer motion bottom sheet
 
+## [0.1.7] 2023-07-06
+
+### Feature / Fix
+
+- add containerRef 'will-change' css property
+- add onMount, onUnmount
+  - onMount : () => void
+  - onUnmount : (scrollTop:number) => void
+- add useWindowSizeHook
+- fixed Bottom sheet location correspondence according to browser
+- refactor containerY : useMotionValue -> useRef
+- refactor snapTo logic
+- refactor lastScrollTopRef
+  - addEventListener.scroll record scrollTop
+- del header property
+
+불필요한 effect를 덜어내고
+시트의 위치가 브라우저 리사이징에 따라 조정되도록 했다.
+
 ## [0.1.61] 2023-07-05
 
 ### Fix

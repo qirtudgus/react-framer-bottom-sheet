@@ -6,8 +6,7 @@ import React, {
 } from 'react';
 
 import { motion } from 'framer-motion';
-
-export type SnapType = 'bottom' | 'top';
+export type SnapType = 'top' | 'bottom';
 
 export interface FramerBottomSheetRefHandles {
   /**
@@ -24,7 +23,7 @@ export interface FramerBottomSheetRefHandles {
    * content ScrollTop Value
    * @returns number
    */
-  getContentScrollTop: () => number;
+  getContentScrollTop: () => number | undefined;
   /**
    * set content scrollTop
    * @param scrollValue
@@ -41,9 +40,7 @@ export interface FramerBottomSheetRefHandles {
     footerRef: HTMLDivElement | null;
   };
 }
-
 export type FramerBottomSheetRef = FramerBottomSheetRefHandles;
-
 export type FramerBottomSheetProps = React.ComponentPropsWithoutRef<
   typeof motion.div
 > &
@@ -71,13 +68,19 @@ export type FramerBottomSheetProps = React.ComponentPropsWithoutRef<
      */
     onCloseEnd?: (event?: MouseEvent | TouchEvent | PointerEvent) => void;
     /**
-     * bottomSheet Header 렌더링 여부
-     * @default [true]
+     * 바텀시트가 언마운트 될 때 실행될 함수
      */
-    header?: boolean;
+    onMount?: () => void;
+    /**
+     * 바텀시트가 언마운트 될 때 실행될 함수
+     */
+    onUnmount?: (scrollTop: number) => void;
+    /**
+     * header component
+     */
     headerElement?: ReactNode;
     /**
-     * bottomSheet Footer 렌더링 여부
+     * footer component
      */
     footerElement?: ReactNode;
     /**
@@ -97,13 +100,11 @@ export type FramerBottomSheetProps = React.ComponentPropsWithoutRef<
      */
     portalContainer?: Element | DocumentFragment;
   };
-
 export interface UsePreventScrollProps {
   scrollRef: MutableRefObject<HTMLElement | null>;
   bottomScrollLock: boolean;
-  position: string;
+  position: SnapType;
 }
-
 export type FramerBottomSheetType = ForwardRefRenderFunction<
   FramerBottomSheetRefHandles,
   FramerBottomSheetProps
