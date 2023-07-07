@@ -46,13 +46,23 @@ export type FramerBottomSheetProps = React.ComponentPropsWithoutRef<
 > &
   PropsWithChildren & {
     /**
-     * 바텀시트 렌더링 시 초기 위치
+     * 렌더링 시 초기 위치
      * @default ['bottom']
      * ```jsx
      * <FramerBottomSheet3 initialPostion={'top'}>
      * ```
      */
     initialPosition: SnapType;
+    /**
+     * 열리게 할 드래그 속도 일반적으로 positive number
+     * @default [30]
+     */
+    openVelocity?: number;
+    /**
+     * 닫히게 할 드래그 속도 일반적으로 negative number
+     * @default [-30]
+     */
+    closeVelocity?: number;
     /**
      * 바텀시트가 열린 후 실행될 콜백 함수
      * ```jsx
@@ -68,11 +78,11 @@ export type FramerBottomSheetProps = React.ComponentPropsWithoutRef<
      */
     onCloseEnd?: (event?: MouseEvent | TouchEvent | PointerEvent) => void;
     /**
-     * 바텀시트가 언마운트 될 때 실행될 함수
+     * 마운트 될 때 실행될 함수
      */
     onMount?: () => void;
     /**
-     * 바텀시트가 언마운트 될 때 실행될 함수
+     * 언마운트 될 때 실행될 함수
      */
     onUnmount?: (scrollTop: number) => void;
     /**
@@ -84,12 +94,11 @@ export type FramerBottomSheetProps = React.ComponentPropsWithoutRef<
      */
     footerElement?: ReactNode;
     /**
-     * bottom일때와 top일때의 스냅포인트
+     * top, bottom snapPoint
      */
     snapPoint: { top: { height: number }; bottom: { height: number } };
     /**
-     * 바텀시트가 내려가있을때 content scrollLock 여부
-     * header가 없을 경우 true를 주면 시트가 핸들링됨
+     * 포지션이 bottom일 때 content scrollLock 여부
      * @default [false]
      */
     bottomScrollLock?: boolean;
@@ -102,6 +111,7 @@ export type FramerBottomSheetProps = React.ComponentPropsWithoutRef<
   };
 export interface UsePreventScrollProps {
   scrollRef: MutableRefObject<HTMLElement | null>;
+  footerRef: MutableRefObject<HTMLElement | null>;
   bottomScrollLock: boolean;
   position: SnapType;
 }

@@ -19,6 +19,8 @@ import useWindowSize from './hooks/useWindowSize';
 const FramerBottomSheet: FramerBottomSheetType = (
   {
     initialPosition = 'bottom',
+    openVelocity = 30,
+    closeVelocity = -30,
     onOpenEnd,
     onCloseEnd,
     onMount,
@@ -37,43 +39,53 @@ const FramerBottomSheet: FramerBottomSheetType = (
   },
   externalRef
 ) => {
-  const [position, setPosition] = useState(initialPosition);
-  const [footerHeight, setFooterHeight] = useState(0);
   const { height } = useWindowSize();
+  const [footerHeight, setFooterHeight] = useState(0);
+  const positionRef = useRef<SnapType>(initialPosition);
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const footerRef = useRef<HTMLDivElement>(null);
+
   const controls = useAnimation();
   const maxHeight = snapPoint.top.height;
   const minHeight = snapPoint.bottom.height;
-  const initialY = initialPosition === 'top' ? 0 : maxHeight - minHeight;
+  const bottomTransFormYValue = maxHeight - minHeight;
+  const initialY = initialPosition === 'top' ? 0 : bottomTransFormYValue;
   const containerY = useRef<number>(initialY);
 
   const heightVariantMemo = useMemo(() => {
     return {
       top: { y: `0px` },
-      bottom: { y: `${maxHeight - minHeight}px` },
+      bottom: { y: `${bottomTransFormYValue}px` },
     };
-  }, [maxHeight, minHeight]);
+  }, [bottomTransFormYValue]);
 
   const { lastScrollTopRef } = usePreventScroll({
     scrollRef,
+    footerRef,
     bottomScrollLock,
-    position,
+    position: positionRef.current,
   });
+
+  const sheetControl = (position: SnapType) => {
+    controls.start(position);
+    containerY.current = position === 'bottom' ? maxHeight : 0;
+    positionRef.current = position;
+  };
+
   useImperativeHandle(externalRef, () => ({
     snapTo: (position: SnapType) => {
-      controls.start(position);
+      sheetControl(position);
     },
     getPosition: () => {
-      return position;
+      return positionRef.current;
     },
     getContentScrollTop: () => {
       return lastScrollTopRef.current;
     },
-    contentScrollTo: (scrollValue: number) => {
+    contentScrollTo: scrollValue => {
       if (scrollRef.current && scrollRef.current.scrollHeight) {
         scrollRef.current.scrollTop = scrollValue;
       }
@@ -88,40 +100,48 @@ const FramerBottomSheet: FramerBottomSheetType = (
       };
     },
   }));
-  // 각 포지션에 맞게 containerY value init
+
+  // 각 포지션에 맞게 Y value init
   const handleClose = async (event: MouseEvent | TouchEvent | PointerEvent) => {
-    setPosition('bottom');
-    controls.start('bottom');
+    sheetControl('bottom');
     onCloseEnd && (await onCloseEnd(event));
-    containerY.current = maxHeight;
   };
   const handleOpen = async (event: MouseEvent | TouchEvent | PointerEvent) => {
-    setPosition('top');
-    controls.start('top');
+    sheetControl('top');
     onOpenEnd && (await onOpenEnd(event));
-    containerY.current = 0;
   };
+
   const handleSlow = async (
     event: MouseEvent | TouchEvent | PointerEvent,
     yValue: number
   ) => {
     // 'top' 스냅포인트와 'bottom' 스냅포인트까지의 거리 계산
     const distanceToTop = Math.abs(yValue - 0);
-    const distanceToBottom = Math.abs(yValue - (maxHeight - minHeight));
+    const distanceToBottom = Math.abs(yValue - bottomTransFormYValue);
+
     if (distanceToTop < distanceToBottom) {
       await handleOpen(event);
     } else {
       await handleClose(event);
     }
   };
+
+  //드래그 속도가 느릴 때 가까운 스냅포인트를 계산하기위함
+  const onDrag = (
+    _: MouseEvent | TouchEvent | PointerEvent,
+    { delta }: PanInfo
+  ) => {
+    containerY.current = Math.max(containerY.current + delta.y, 0);
+  };
+
   const onDragEnd = async (
     event: MouseEvent | TouchEvent | PointerEvent,
     info: PanInfo
   ) => {
     const speedY = info.velocity.y;
     const yValue = containerY.current;
-    const shouldClose = speedY > 30;
-    const shouldOpen = speedY < -30;
+    const shouldClose = speedY > openVelocity;
+    const shouldOpen = speedY < closeVelocity;
     if (shouldClose) {
       await handleClose(event);
     } else if (shouldOpen) {
@@ -131,43 +151,26 @@ const FramerBottomSheet: FramerBottomSheetType = (
     }
   };
 
-  //드래그 속도가 느릴 때 가까운 스냅포인트를 계산하기위한 y set - 실제 애니메이션에는 쓰이지않음
-  const onDrag = (
-    _: MouseEvent | TouchEvent | PointerEvent,
-    { delta }: PanInfo
-  ) => {
-    containerY.current = Math.max(containerY.current + delta.y, 0);
-  };
-
-  //footer의 높이만큼 시트의 bottom에 할당
+  //footerElement 높이만큼 시트의 bottom에 할당
   useLayoutEffect(() => {
     if (footerRef.current && footerElement) {
       setFooterHeight(footerRef.current.scrollHeight);
     }
   }, [footerElement]);
 
-  // motion.div initial Property bug로 인해 대신 사용하는 초기 포지션 설정
-  useEffect(() => {
-    if (initialPosition === 'bottom') {
-      controls.start('bottom', { duration: 0 });
-    } else {
-      controls.start('top', { duration: 0 });
-    }
-  }, [controls, initialPosition]);
+  // 브라우저 리사이징 대응 & 초기 포지션 설정
+  useLayoutEffect(() => {
+    controls.start(positionRef.current, { duration: 0 });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [height]);
 
-  //mount, unmount
+  //mount, unmount 함수
   useEffect(() => {
     onMount && onMount();
     return () => {
       onUnmount && onUnmount(lastScrollTopRef.current);
     };
   }, [lastScrollTopRef, onMount, onUnmount]);
-
-  // Browser resizing 대응
-  useLayoutEffect(() => {
-    controls.start(position, { duration: 0 });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [height]);
 
   return (
     <>
@@ -179,12 +182,13 @@ const FramerBottomSheet: FramerBottomSheetType = (
             drag={'y'}
             onDrag={onDrag}
             onDragEnd={onDragEnd}
+            dragDirectionLock={true}
             animate={controls}
             variants={heightVariantMemo}
             dragConstraints={
               dragConstraints ?? {
                 top: 0,
-                bottom: maxHeight - minHeight,
+                bottom: bottomTransFormYValue,
               }
             }
             dragMomentum={dragMomentum ?? false}
@@ -241,8 +245,7 @@ const FramerBottomSheet: FramerBottomSheetType = (
                 overscrollBehavior: 'contain',
                 height: '100%',
                 flexGrow: 1,
-                overflow:
-                  bottomScrollLock && position === 'bottom' ? 'hidden' : 'auto',
+                overflow: 'auto',
               }}
             >
               <div data-content-ref ref={contentRef}>

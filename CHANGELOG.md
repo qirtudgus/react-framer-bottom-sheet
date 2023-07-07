@@ -2,14 +2,29 @@
 
 framer motion bottom sheet
 
+## [0.1.8] 2023-07-08
+
+### Feature
+
+- add touchmoveEvent preventDefault to footerElement
+- add velocity value properties to recognize when opening and closing sheets
+  - openVelocity?: number
+  - closeVelocity?: number
+- containerRef dragDirectionLock property default set true
+
+### Refactor
+
+- Improveed drag animation by using event control instead of overflow
+- Improved performance by replacing useState, which manages position status, with useRef
+
 ## [0.1.7] 2023-07-06
 
 ### Feature / Fix
 
 - add containerRef 'will-change' css property
 - add onMount, onUnmount
-  - onMount : () => void
-  - onUnmount : (scrollTop:number) => void
+  - onMount?: () => void
+  - onUnmount?: (scrollTop:number) => void
 - add useWindowSizeHook
 - fixed Bottom sheet location correspondence according to browser
 - refactor containerY : useMotionValue -> useRef
@@ -25,13 +40,13 @@ framer motion bottom sheet
 
 ### Fix
 
-- Fixed a two FooterElement
+- fixed a bug where two footer components were rendered
 
 ## [0.1.6] 2023-07-05
 
 ### Feature / Fix
 
-- Fixed a bug that did not drag during initial bottom sheet rendering
+- fixed a bug that did not drag during initial bottom sheet rendering
 - add useImperativeHandle method
 
 ## [0.1.53] 2023-07-03
