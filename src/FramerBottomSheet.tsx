@@ -71,7 +71,7 @@ const FramerBottomSheet: FramerBottomSheetType = (
 
   const sheetControl = (position: SnapType) => {
     controls.start(position);
-    containerY.current = position === 'bottom' ? maxHeight : 0;
+    containerY.current = position === 'bottom' ? bottomTransFormYValue : 0;
     positionRef.current = position;
   };
 
