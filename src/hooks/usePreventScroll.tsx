@@ -33,7 +33,7 @@ const usePreventScroll = ({
       initialTouchYCoordRef.current = e.touches[0]?.clientY ?? 0; // 터치 시작점의 Y 좌표 저장
       hasScrolledRef.current = doesElementHaveScroll(scrollRef.current); // 세로 스크롤 여부를 판단
     };
-    const handleTouchEnd = (e: TouchEvent) => {
+    const handleTouchEnd = () => {
       if (!scrollRef.current) return;
       hasScrolledRef.current = doesElementHaveScroll(scrollRef.current); // 세로 스크롤 여부를 재확인
     };
@@ -59,7 +59,7 @@ const usePreventScroll = ({
     };
     let prevValue = 0;
     // Safari에서의 오버스크롤을 방지하는 함수
-    const preventSafariOverscrollOnStart = (e: TouchEvent) => {
+    const preventSafariOverscrollOnStart = () => {
       if (!scrollRef.current) return;
       if (scrollRef.current.scrollTop <= 0) {
         prevValue = scrollRef.current.scrollTop;
