@@ -107,13 +107,14 @@ export type FramerBottomSheetProps = React.ComponentPropsWithoutRef<
      * createPortal Container
      * @default document.body
      */
-    portalContainer?: Element | DocumentFragment;
+    portalContainer?: Element | DocumentFragment | null;
   };
 export interface UsePreventScrollProps {
   scrollRef: MutableRefObject<HTMLElement | null>;
   footerRef: MutableRefObject<HTMLElement | null>;
+  position: MutableRefObject<SnapType>;
   bottomScrollLock: boolean;
-  position: SnapType;
+  portalContainer?: Element | DocumentFragment | null;
 }
 export type FramerBottomSheetType = ForwardRefRenderFunction<
   FramerBottomSheetRefHandles,

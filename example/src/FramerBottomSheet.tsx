@@ -12,6 +12,7 @@ import { PanInfo, motion, useAnimation } from 'framer-motion';
 import { createPortal } from 'react-dom';
 
 import { usePreventScroll } from './hooks/usePreventScroll';
+import React from 'react';
 import { FramerBottomSheetType, SnapType } from './sheetType';
 import useWindowSize from './hooks/useWindowSize';
 
@@ -65,12 +66,13 @@ const FramerBottomSheet: FramerBottomSheetType = (
     scrollRef,
     footerRef,
     bottomScrollLock,
-    position: positionRef.current,
+    position: positionRef,
+    portalContainer,
   });
 
   const sheetControl = (position: SnapType) => {
     controls.start(position);
-    containerY.current = position === 'bottom' ? bottomTransFormYValue : 0;
+    containerY.current = position === 'top' ? 0 : bottomTransFormYValue;
     positionRef.current = position;
   };
 
@@ -160,7 +162,7 @@ const FramerBottomSheet: FramerBottomSheetType = (
   // 브라우저 리사이징 대응 & 초기 포지션 설정
   useLayoutEffect(() => {
     controls.start(positionRef.current, { duration: 0 });
-  }, [height]);
+  }, [height, portalContainer, controls]);
 
   //mount, unmount 함수
   useEffect(() => {
@@ -174,18 +176,6 @@ const FramerBottomSheet: FramerBottomSheetType = (
     <>
       {createPortal(
         <>
-          //TODO 오버레이 배경 제작
-          <motion.div
-            style={{
-              position: 'fixed',
-              left: 0,
-              bottom: 0,
-              top: 0,
-              right: 0,
-              backgroundColor: 'black',
-              opacity: 0.5,
-            }}
-          ></motion.div>
           <motion.div
             data-container-ref
             ref={containerRef}
@@ -207,7 +197,7 @@ const FramerBottomSheet: FramerBottomSheetType = (
               dragTransition ?? { min: 0, max: 0, bounceStiffness: 400 }
             }
             transition={{
-              type: 'just',
+              type: 'tween',
             }}
             style={{
               position: 'fixed',
@@ -281,7 +271,7 @@ const FramerBottomSheet: FramerBottomSheetType = (
             </div>
           )}
         </>,
-        portalContainer ?? document.body
+        portalContainer ? portalContainer : document.body
       )}
     </>
   );

@@ -2,6 +2,15 @@
 
 framer motion bottom sheet
 
+## [0.1.9] 2023-07-24
+
+### Fix
+
+- fix portalContainer Bug
+  - portalContainer 전달 시 포지션이 제대로 렌더링되지않던 버그 수정
+- fix bottomScrollLock Bug
+  - 초기 포지션이 'bottom'일때 잘못된 scrollRef를 참조하던 버그 수정
+
 ## [0.1.8] 2023-07-08
 
 ### Feature
