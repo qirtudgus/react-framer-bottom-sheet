@@ -160,7 +160,7 @@ const FramerBottomSheet: FramerBottomSheetType = (
   }, [footerElement]);
 
   // 브라우저 리사이징 대응 & 초기 포지션 설정
-  useLayoutEffect(() => {
+  useEffect(() => {
     controls.start(positionRef.current, { duration: 0 });
   }, [height, portalContainer, controls]);
 
