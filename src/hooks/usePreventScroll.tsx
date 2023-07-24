@@ -6,6 +6,7 @@ const usePreventScroll = ({
   footerRef,
   bottomScrollLock,
   position,
+  portalContainer,
 }: UsePreventScrollProps) => {
   const hasScrolledRef = useRef(false);
   const initialTouchYCoordRef = useRef(0);
@@ -21,7 +22,7 @@ const usePreventScroll = ({
       // 스크롤이 없고, 현재 위치가 'top'인지 확인
       const isNoScrollAndTop = !hasScroll && isTopPosition;
       // 바텀일 때 스크롤이 잠금이 true인지, 현재 위치가 'bottom'인지 확인
-      const isBottomLocked = bottomScrollLock && position === 'bottom';
+      const isBottomLocked = bottomScrollLock && position.current === 'bottom';
       return isNoScrollAndTop || isBottomLocked;
     },
     [bottomScrollLock, position]
@@ -44,11 +45,11 @@ const usePreventScroll = ({
       const shouldPreventDown =
         !hasScrolledRef.current ||
         scrollRef.current.scrollTop <= 0 ||
-        (bottomScrollLock && position === 'bottom');
+        (bottomScrollLock && position.current === 'bottom');
       // 위로 움직였을 때, 스크롤이 없거나 현재 위치가 'top'이거나 바텀 스크롤 잠금이 있는 경우 위로 스크롤 막기
       const shouldPreventUP = shouldPreventOnSlideUp(
         hasScrolledRef.current,
-        position === 'top'
+        position.current === 'top'
       );
       // 아래로 슬라이드하고 스크롤을 막아야 할 경우
       if (isSlideDown && shouldPreventDown && e.cancelable) {
@@ -83,7 +84,7 @@ const usePreventScroll = ({
     };
 
     const bottomLockScrollEvent = (e: Event) => {
-      if (bottomScrollLock && position === 'bottom') {
+      if (bottomScrollLock && position.current === 'bottom') {
         e.preventDefault();
       }
     };
@@ -147,6 +148,7 @@ const usePreventScroll = ({
     position,
     shouldPreventOnSlideUp,
     footerRef,
+    portalContainer,
   ]);
   return {
     hasScrolledRef,

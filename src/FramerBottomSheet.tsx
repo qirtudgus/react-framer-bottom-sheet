@@ -66,7 +66,8 @@ const FramerBottomSheet: FramerBottomSheetType = (
     scrollRef,
     footerRef,
     bottomScrollLock,
-    position: positionRef.current,
+    position: positionRef,
+    portalContainer,
   });
 
   const sheetControl = (position: SnapType) => {
@@ -161,8 +162,7 @@ const FramerBottomSheet: FramerBottomSheetType = (
   // 브라우저 리사이징 대응 & 초기 포지션 설정
   useLayoutEffect(() => {
     controls.start(positionRef.current, { duration: 0 });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [height]);
+  }, [height, portalContainer, controls]);
 
   //mount, unmount 함수
   useEffect(() => {
@@ -197,7 +197,7 @@ const FramerBottomSheet: FramerBottomSheetType = (
               dragTransition ?? { min: 0, max: 0, bounceStiffness: 400 }
             }
             transition={{
-              type: 'just',
+              type: 'tween',
             }}
             style={{
               position: 'fixed',
@@ -271,7 +271,7 @@ const FramerBottomSheet: FramerBottomSheetType = (
             </div>
           )}
         </>,
-        portalContainer ?? document.body
+        portalContainer ? portalContainer : document.body
       )}
     </>
   );
