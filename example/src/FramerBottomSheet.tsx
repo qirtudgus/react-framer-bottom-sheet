@@ -12,7 +12,6 @@ import { PanInfo, motion, useAnimation } from 'framer-motion';
 import { createPortal } from 'react-dom';
 
 import { usePreventScroll } from './hooks/usePreventScroll';
-import React from 'react';
 import { FramerBottomSheetType, SnapType } from './sheetType';
 import useWindowSize from './hooks/useWindowSize';
 
@@ -71,7 +70,7 @@ const FramerBottomSheet: FramerBottomSheetType = (
 
   const sheetControl = (position: SnapType) => {
     controls.start(position);
-    containerY.current = position === 'top' ? 0 : bottomTransFormYValue;
+    containerY.current = position === 'bottom' ? bottomTransFormYValue : 0;
     positionRef.current = position;
   };
 
@@ -161,7 +160,6 @@ const FramerBottomSheet: FramerBottomSheetType = (
   // 브라우저 리사이징 대응 & 초기 포지션 설정
   useLayoutEffect(() => {
     controls.start(positionRef.current, { duration: 0 });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [height]);
 
   //mount, unmount 함수
@@ -176,6 +174,18 @@ const FramerBottomSheet: FramerBottomSheetType = (
     <>
       {createPortal(
         <>
+          //TODO 오버레이 배경 제작
+          <motion.div
+            style={{
+              position: 'fixed',
+              left: 0,
+              bottom: 0,
+              top: 0,
+              right: 0,
+              backgroundColor: 'black',
+              opacity: 0.5,
+            }}
+          ></motion.div>
           <motion.div
             data-container-ref
             ref={containerRef}

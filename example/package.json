@@ -5,20 +5,35 @@
   "license": "MIT",
   "scripts": {
     "start": "parcel index.html",
+    "start2": "react-scripts start",
     "build": "parcel build index.html"
   },
   "dependencies": {
     "react-app-polyfill": "^1.0.0"
   },
   "alias": {
-    "react": "../node_modules/react",
-    "react-dom": "../node_modules/react-dom/profiling",
     "scheduler/tracing": "../node_modules/scheduler/tracing-profiling"
   },
   "devDependencies": {
     "@types/react": "^18.2.14",
     "@types/react-dom": "^18.2.6",
+    "framer-motion": "^10.12.18",
     "parcel": "^2.9.3",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-scripts": "5.0.1",
     "typescript": "^5.1.6"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }
